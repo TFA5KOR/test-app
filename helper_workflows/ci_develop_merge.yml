@@ -1,3 +1,6 @@
+# This workflow gets triggered when pull_request is merged into the develop branch
+# It is not different file but just extra if checks on ci_develop_pull workflow
+
 name: CI
 
 on: 
