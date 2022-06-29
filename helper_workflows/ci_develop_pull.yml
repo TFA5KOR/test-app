@@ -1,0 +1,25 @@
+# It will run when someone opens a pull request to develop
+
+name: CI
+
+on: 
+  pull_request:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      #This is option ( if you want different node version than the present in VM )
+      - name: USE NODE JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install Dependencies
+        run: npm ci # similar to npm install
+      #- run: npm run format:check #if you have setup the pretty formatting   
+      - name: run our tests
+        run: npm test -- --coverage
+        env:
+          CI: true
