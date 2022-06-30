@@ -1,0 +1,61 @@
+# In addition to whateve happens on develop, this workflow will work when PR raised for master and when merged on master
+
+name: CI
+
+on: 
+   pull_request:
+     branches: [develop, master]
+   push:
+     branches: [develop, master] #merging is basically pushing changes into develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      #This is option ( if you want different node version than the present in VM )
+      - name: USE NODE JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      # It has to be before running installation
+      # key changes when os changes or there is a change in package-lock.json files
+      - name: Cache node_modules
+        uses: actions/cache@v1 # In this repository examples of many package managers are given
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-{{ hashFiles('**/package-lock.json') }} # key is used to retrieve cache.
+          # extra keys that github can search for caches at if github doesn't find cache using the key. There can be multiple restore keys. 
+          # restore-keys:            
+      - name: Install Dependencies
+        run: npm ci # similar to npm install
+      #- run: npm run format:check #if you have setup the pretty formatting   
+      - name: run our tests
+        run: npm test -- --coverage
+        env:
+          CI: true
+      - name: Upload Test Coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage # path of the folder we want to upload
+      - name: Build project
+        if: github.event_name == 'push'
+        run: npm run build
+      - name: Upload Build Folder
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build # path of the folder we want to upload
+      - run: npm install -g surge
+      - name: Deploying to Staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: surge --project ./build --domain hateful-rose.surge.sh
+      - name: Deploying to Production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: surge --project ./build --domain acoustic-seat.surge.sh
+        
