@@ -1,3 +1,6 @@
+# This workflow gets triggered when pull_request is merged into the develop branch and performs caching of dependencies
+# It is not different file but just extra if checks on ci_develop_pull workflow
+
 name: CI
 
 on: 
@@ -32,20 +35,9 @@ jobs:
         run: npm test -- --coverage
         env:
           CI: true
-      - name: Upload Test Coverage
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage
-          path: coverage # path of the folder we want to upload
       - name: Build project
         if: github.event_name == 'push'
         run: npm run build
-      - name: Upload Build Folder
-        if: github.event_name == 'push'
-        uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build # path of the folder we want to upload
       - run: npm install -g surge
       - name: Deploying to Staging
         if: github.event_name == 'push'
