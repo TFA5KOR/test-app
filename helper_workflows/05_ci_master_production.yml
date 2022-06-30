@@ -1,3 +1,5 @@
+# In addition to whateve happens on develop, this workflow will work when PR raised for master and when merged on master
+
 name: CI
 
 on: 
