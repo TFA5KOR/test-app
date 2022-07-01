@@ -263,5 +263,10 @@ In addition to the existing workflow there will be few extra steps:
 We can all extra steps in the same workflow by just adding few extra conditions for the master branch.
 
 ---
-- Check for Creating Issue on failed WORKFLOW
-- Check for CommitLint
+# Further enhancements
+- Git message can be checked and put into check by using commitlint or commitizen
+  - https://github.com/conventional-changelog/commitlint
+  - https://github.com/commitizen/cz-cli
+- New Issues can be created on workflows failure by using the curl command. 
+- Badge can be assigned to your readme file to show build status
+  - https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge
