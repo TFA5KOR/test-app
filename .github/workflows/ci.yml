@@ -1,8 +1,10 @@
 name: CI
 
 on: 
-  pull_request:
-    branches: [develop]
+   pull_request:
+     branches: [develop]
+   push:
+     branches: [develop] #merging is basically pushing changes into develop
 
 jobs:
   build:
@@ -14,6 +16,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+      # It has to be before running installation
+      # key changes when os changes or there is a change in package-lock.json files
+      - name: Cache node_modules
+        uses: actions/cache@v1 # In this repository examples of many package managers are given
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} # key is used to retrieve cache.
+          # extra keys that github can search for caches at if github doesn't find cache using the key. There can be multiple restore keys. 
+          # restore-keys:                
       - name: Install Dependencies
         run: npm ci # similar to npm install
       #- run: npm run format:check #if you have setup the pretty formatting   
@@ -21,3 +32,13 @@ jobs:
         run: npm test -- --coverage
         env:
           CI: true
+      - name: Build project
+        if: github.event_name == 'push'
+        run: npm run build
+      - run: npm install -g surge
+      - name: Deploying to Staging
+        if: github.event_name == 'push'
+        run: surge --project ./build --domain hateful-rose.surge.sh
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
