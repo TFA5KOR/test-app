@@ -1,3 +1,5 @@
+![CI WorkFLow](https://github.com/TFA5KOR/test-app/actions/workflows/ci.yml/badge.svg?branch=develop&event=push)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

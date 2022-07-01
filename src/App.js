@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React For GITHUB
+          Learn React For ETB Session
         </a>
       </header>
     </div>
