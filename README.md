@@ -1,4 +1,4 @@
-![CI WorkFLow](https://github.com/TFA5KOR/test-app/actions/workflows/CI.yml/badge.svg?branch=develop&event=push)
+![CI WorkFLow](https://github.com/TFA5KOR/test-app/actions/workflows/ci.yml/badge.svg?branch=develop&event=push)
 
 # Getting Started with Create React App
 
